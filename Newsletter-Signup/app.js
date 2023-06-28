@@ -16,7 +16,6 @@ app.post("/", function(req, res){
     var lastName = req.body.lName;
     var email = req.body.email;
     console.log(firstNmae+ lastName+ email);
-    const apiKey = "6e32b2ee12bb23430bbd0180cf4efd87-us21";
 });
 
 app.listen(3000, function(){
