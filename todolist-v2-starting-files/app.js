@@ -1,4 +1,3 @@
-//jshint esversion:6
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,7 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser : true});
+mongoose.connect("mongodb://localhost:27017", {useNewUrlParser : true});
 
 const itemsSchema={
   name: String
@@ -59,9 +58,9 @@ app.get("/", function(req, res) {
       res.render("list", {listTitle: "Today", newListItems: foundItems});
     }
   });
-
-
 });
+
+
 
 app.get("/:customListName", function(req, res){
   const customListName = _.capitalize(req.params.customListName);
@@ -101,33 +100,40 @@ app.post("/", function(req, res){
     res.redirect("/");
   } else {
     List.findOne({ name: listName }).then(function (foundList) {
-      if (foundList) {
         foundList.items.push(item);
         foundList.save();
         res.redirect("/" + listName);
-      }
     });
   }
 });
 
 
-app.post("/delete", function(req, res){
+
+app.post("/delete", function(req, res) {
   const checkedItemId = req.body.checkbox;
   const listName = req.body.listName;
 
   if (listName === "Today") {
-    Item.findByIdAndRemove(checkedItemId).then(function(err){
-      if (!err) {
+    Item.findByIdAndRemove(checkedItemId)
+      .then(function() {
         console.log("Successfully deleted checked item.");
         res.redirect("/");
-      }
-    });
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
   } else {
-    List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: checkedItemId}}}).then(function(err, foundList){
-      if (!err){
+    List.findOneAndUpdate(
+      { name: listName },
+      { $pull: { items: { _id: checkedItemId } } }
+    )
+      .then(function() {
+        console.log("Successfully deleted checked item from custom list.");
         res.redirect("/" + listName);
-      }
-    });
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
   }
 });
 
