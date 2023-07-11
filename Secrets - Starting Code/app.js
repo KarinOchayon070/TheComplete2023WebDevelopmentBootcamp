@@ -5,8 +5,11 @@ const ejs = require("ejs");
 const mongoose = require("mongoose");
 // const encrypt = require("mongoose-encryption");
 // const md5 = require("md5");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+// const bcrypt = require("bcrypt");
+// const saltRounds = 10;
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
  
 const app = express();
 
@@ -42,38 +45,40 @@ app.get("/register", function(req, res){
 
 app.post("/register", function(req, res){
 
-    bcrypt.hash(req.body.password, saltRounds, function(err, hash){
+    // bcrypt.hash(req.body.password, saltRounds, function(err, hash){
 
-        const newUser = new User({
-            email: req.body.username,
-            password: hash
-        })
+    //     const newUser = new User({
+    //         email: req.body.username,
+    //         password: hash
+    //     })
     
-        newUser.save()
-        .then(function(){
-            res.render("secrets");
-        })
-        .catch(function(err){
-            console.log(err);
-        });
-    });
+    //     newUser.save()
+    //     .then(function(){
+    //         res.render("secrets");
+    //     })
+    //     .catch(function(err){
+    //         console.log(err);
+    //     });
+    // });
 
 });
 
 app.post("/login", function(req, res){
 
-    const username = req.body.username;
-    const password = req.body.password;
+    // const username = req.body.username;
+    // const password = req.body.password;
 
-    User.findOne({email : username})
-    .then(function(results){
-        if(results.password === password){
-            res.render("secrets");
-        }
-    }) 
-    .catch(function(err){
-        console.log(err);
-    });
+    // User.findOne({email : username})
+    // .then(function(results){
+    //     bcrypt.compare(password, results.password, function(error, result){
+    //         if(result === true){
+    //             res.render("secrets");
+    //         }
+    //     });
+    // }) 
+    // .catch(function(err){
+    //     console.log(err);
+    // });
 });
 
 app.listen(3000, function(){
